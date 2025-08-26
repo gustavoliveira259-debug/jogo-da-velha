@@ -1,25 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+//Criação do elemento isquere que ira compor o tabuleiro
+import "./App.css";
+export default function Squere(){
+  return(
+    <div>
+    <button className= "squere">1</button>
+    <button className= "squere">2</button>
+    <button className= "squere">3</button>
+    <button className= "squere">4</button>
+    <button className= "squere">5</button>
+    <button className= "squere">6</button>
+    <button className= "squere">7</button>
+    <button className= "squere">8</button>
+    <button className= "squere">9</button>
     </div>
-  );
+  )
 }
-
-export default App;
