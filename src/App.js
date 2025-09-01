@@ -15,11 +15,22 @@ return(
 
 export default function Tabuleiro(){
   const [squares, setSquare] = useState(Array(9).fill(null));
+  const [xIsNext, setxIsNext] = useState(true);
 
   function handleClick (i){
+    if (squares[i]){ // se square de i é null o if não executa o return !!!
+     return; 
+     // O handle Click continua a executação pois o return não
+     // foi executado o squareas[i] era NULL!!
+  }
+
     const nextSquares = squares.slice();
-    nextSquares[i] = "X";
+    if (xIsNext)
+      {nextSquares[i] = "x";}
+    else
+    {nextSquares[i] = "o";}
     setSquare(nextSquares);
+    setxIsNext(!xIsNext)
   }
 
   return(
