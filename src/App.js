@@ -1,74 +1,122 @@
-//Criação do elemento isquere que ira compor o tabuleiro
-import { useState } from 'react';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
 
-
-function Square({valor, onSquareClick}){
-return(
-<button className="Square" onClick={onSquareClick}>
-{valor}
-</button>
-)
+// Criação do elemento square que irá compor o tabuleiro
+function Square({ valor, onSquareClick }) {
+  return (
+    <button className="square" onClick={onSquareClick}>
+      {valor}
+    </button>
+  );
 }
 
-
-
-export default function Tabuleiro(){
-  const [squares, setSquare] = useState(Array(9).fill(null));
-  const [xIsNext, setxIsNext] = useState(true);
-
-  function handleClick (i){
-    if (squares[i] || calculaVencedor(squares))
-     {return}; 
-     // O handle Click continua a executação pois o return não
-     // foi executado o squareas[i] era NULL!!
-  
-
+function Tabuleiro({ xIsNext, squares, onPlay }) {
+  function handleClick(i) {
+    // Se já tem valor ou se já tem vencedor, não faz nada
+    if (squares[i] || haVencedor(squares)) {
+      return;
+    }
+    // Clona o array
     const nextSquares = squares.slice();
-    if (xIsNext)
-      {nextSquares[i] = "x";}
-    else
-    {nextSquares[i] = "o";}
-    setSquare(nextSquares);
-    setxIsNext(!xIsNext)
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
+    onPlay(nextSquares);
   }
 
-  return(
+  const vencedor = haVencedor(squares);
+  let status;
+  if (vencedor) {
+    status = "Vencedor: " + vencedor;
+  } else {
+    status = "Próximo a jogar: " + (xIsNext ? "X" : "O");
+  }
+
+  return (
     <div>
+      <div className="status">{status}</div>
       <div>
-      <Square valor={squares[0]} onSquareClick={()=>{handleClick(0)}} />
-      <Square valor={squares[1]} onSquareClick={()=>{handleClick(1)}} />
-      <Square valor={squares[2]} onSquareClick={()=>{handleClick(2)}} />
-     </div>
-     <div>
-      <Square valor={squares[3]} onSquareClick={()=>{handleClick(3)}} />
-      <Square valor={squares[4]} onSquareClick={()=>{handleClick(4)}} />
-      <Square valor={squares[5]} onSquareClick={()=>{handleClick(5)}} />
-    </div>
-    <div>
-      <Square valor={squares[6]} onSquareClick={()=>{handleClick(6)}} />
-      <Square valor={squares[7]} onSquareClick={()=>{handleClick(7)}} />
-      <Square valor={squares[8]} onSquareClick={()=>{handleClick(8)}} />
-    </div>
+        <Square valor={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square valor={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square valor={squares[2]} onSquareClick={() => handleClick(2)} />
+      </div>
+      <div>
+        <Square valor={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square valor={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square valor={squares[5]} onSquareClick={() => handleClick(5)} />
+      </div>
+      <div>
+        <Square valor={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square valor={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square valor={squares[8]} onSquareClick={() => handleClick(8)} />
+      </div>
     </div>
   );
-};
-
- function calculaVencedor(squares) {
-  const linhas = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Linhas horizontais
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Linhas verticais
-    [0, 4, 8], [2, 4, 6]              // Linhas diagonais
-  ];
-
-  
-  for (let index = 0; index < linhas.length; index++) {
-    const [a, b, c] = linhas[index];
-    if (squares[a] && squares[a] === squares[b] && squares[b] === squares[c]) {
-      return squares[a]; // Retorna o vencedor ('X' ou 'O')
-    }
-  }
-  return null; // Se não houver vencedor, retorna null
 }
 
+// Implementa o game
+export default function Game() {
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove];
 
+  function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+  }
+
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+  }
+
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0) {
+      description = "Ir para o movimento #" + move;
+    } else {
+      description = "Ir para o início do jogo";
+    }
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        {/* Corrigido: não chamar a função, apenas passar a referência */}
+        <Tabuleiro xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">
+        <ul>{moves}</ul>
+      </div>
+    </div>
+  );
+}
+
+function haVencedor(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for (let index = 0; index < lines.length; index++) {
+    const [a, b, c] = lines[index];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
