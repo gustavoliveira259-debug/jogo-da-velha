@@ -18,11 +18,11 @@ export default function Tabuleiro(){
   const [xIsNext, setxIsNext] = useState(true);
 
   function handleClick (i){
-    if (squares[i]){ // se square de i é null o if não executa o return !!!
-     return; 
+    if (squares[i] || calculaVencedor(squares))
+     {return}; 
      // O handle Click continua a executação pois o return não
      // foi executado o squareas[i] era NULL!!
-  }
+  
 
     const nextSquares = squares.slice();
     if (xIsNext)
@@ -51,5 +51,24 @@ export default function Tabuleiro(){
       <Square valor={squares[8]} onSquareClick={()=>{handleClick(8)}} />
     </div>
     </div>
-  )
+  );
+};
+
+ function calculaVencedor(squares) {
+  const linhas = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Linhas horizontais
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Linhas verticais
+    [0, 4, 8], [2, 4, 6]              // Linhas diagonais
+  ];
+
+  
+  for (let index = 0; index < linhas.length; index++) {
+    const [a, b, c] = linhas[index];
+    if (squares[a] && squares[a] === squares[b] && squares[b] === squares[c]) {
+      return squares[a]; // Retorna o vencedor ('X' ou 'O')
+    }
+  }
+  return null; // Se não houver vencedor, retorna null
 }
+
+
