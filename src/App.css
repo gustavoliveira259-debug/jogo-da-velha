@@ -1,4 +1,107 @@
-.Square {
-  font-size: medium;
-  color:blue
+/* App.css */
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.game-board {
+  margin-bottom: 20px;
+}
+
+.status {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+/* Linhas do tabuleiro */
+.game-board > div {
+  display: flex;
+}
+
+.square {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border: 2px solid #999;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px;
+}
+
+.square:hover {
+  background-color: #e6e6e6;
+}
+
+/* Remover bordas duplas */
+div > div:first-child .square {
+  border-top: none;
+}
+
+div > div:last-child .square {
+  border-bottom: none;
+}
+
+.square:nth-child(1) {
+  border-left: none;
+}
+
+.square:nth-child(3) {
+  border-right: none;
+}
+
+/* Cores para X e O */
+.square:contains("X") {
+  color: #ff4444;
+}
+
+.square:contains("O") {
+  color: #4444ff;
+}
+
+.game-info {
+  width: 100%;
+  max-width: 300px;
+}
+
+.game-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.game-info li {
+  margin-bottom: 5px;
+}
+
+.game-info button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.game-info button:hover {
+  background: #45a049;
 }
